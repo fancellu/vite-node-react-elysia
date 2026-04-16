@@ -5,4 +5,4 @@ import type { App } from "@backend/server";
 
 const url = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
 
-export const client = edenTreaty<App>(url)
+export const client: ReturnType<typeof edenTreaty<App>> = edenTreaty<App>(url)

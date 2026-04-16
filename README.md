@@ -38,6 +38,26 @@ This project demonstrates a modern full-stack architecture using **Elysia** on *
    - Frontend: [http://localhost:5173](http://localhost:5173)
    - Backend API: [http://localhost:5173/api/hello](http://localhost:5173/api/hello) (proxied)
 
+## Production Build
+
+1. **Build the Frontend**:
+   ```bash
+   npm run build
+   ```
+   This compiles TypeScript and builds the React app to `frontend/dist`.
+
+2. **Start the Production Server**:
+   ```bash
+   npm start
+   ```
+   The backend serves the built frontend and API on port 3000.
+
+3. **Access the Production App**:
+   - Application: [http://localhost:3000](http://localhost:3000)
+   - Backend API: [http://localhost:3000/api/hello](http://localhost:3000/api/hello)
+
+**Note**: Due to issues with `@elysiajs/static` plugin (MIME type handling), this project uses a custom static file server in production that properly sets content types for `.js`, `.css`, `.png`, `.svg`, and other assets.
+
 ## Asset Management
 
 This project uses two different ways to handle static files, following Vite best practices:
@@ -75,7 +95,16 @@ And consumes it in the frontend for a completely type-safe developer experience:
 import { edenTreaty } from '@elysiajs/eden'
 import type { App } from "@backend/server";
 
-export const client = edenTreaty<App>(window.location.origin)
+export const client: ReturnType<typeof edenTreaty<App>> = edenTreaty<App>(window.location.origin)
 ```
 
 No more manual interface syncing or `fetch` guessing!
+
+## TypeScript Configuration
+
+The project uses TypeScript project references for clean separation:
+- `tsconfig.json`: Root configuration with project references
+- `tsconfig.app.json`: Frontend configuration (includes both frontend and backend for type imports)
+- `tsconfig.node.json`: Backend and tooling configuration
+
+Both frontend and backend configs use `composite: true` to enable proper type checking during builds.

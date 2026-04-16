@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "dev:backend": "tsx watch backend/src/server.ts",
-    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\""
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "start": "cross-env NODE_ENV=production tsx backend/src/server.ts"
   },
   "dependencies": {
     "@elysiajs/node": "1",
@@ -20,6 +21,7 @@
     "react-dom": "^19.2.5"
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "@eslint/js": "^9.39.4",
     "@types/node": "^24.12.2",
     "@types/react": "^19.2.14",
