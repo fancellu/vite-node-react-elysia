@@ -1,73 +1,81 @@
-# React + TypeScript + Vite
+# Vite + Node + React + Elysia (no Bun)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project demonstrates a modern full-stack architecture using **Elysia** on **Node.js** with a **React** frontend powered by **Vite**. It achieves end-to-end type safety without requiring the Bun runtime.
 
-Currently, two official plugins are available:
+## Core Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **🚀 Elysia on Node.js**: High-performance backend using the `@elysiajs/node` adapter.
+- **🛡️ Eden Treaty**: Full end-to-end type safety. The frontend "knows" the backend API types automatically.
+- **⚡ Vite Frontend**: Fast HMR and optimized builds for React.
+- **💎 TypeScript "Project References"**: Clean separation between Frontend, Backend, and Tooling (Vite) configurations.
+- **🔧 Zero Bun Dependency**: Optimized for environments where Node.js is the preferred runtime.
 
-## React Compiler
+## Project Structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+├── backend/src/server.ts  # Elysia server & API definitions
+├── frontend/src/          # React application
+│   ├── eden.ts            # Eden Treaty client configuration
+│   └── App.tsx            # Type-safe API usage example
+├── public/                # Static assets
+└── vite.config.ts         # Vite configuration with API proxy
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. **Run Development Mode**:
+   Starts both the backend (port 3000) and the frontend (port 5173) concurrently.
+   ```bash
+   npm run dev
+   ```
+
+3. **Access the App**:
+   - Frontend: [http://localhost:5173](http://localhost:5173)
+   - Backend API: [http://localhost:5173/api/hello](http://localhost:5173/api/hello) (proxied)
+
+## Asset Management
+
+This project uses two different ways to handle static files, following Vite best practices:
+
+### 1. `frontend/src/assets/` (The "Imported" way)
+Use this for images and files used directly inside your React components.
+- **How it works**: Vite processes these files, adds a content hash to the filename for cache busting (e.g., `hero-Cj38S9a.png`), and can even inline small files.
+- **Usage**:
+  ```tsx
+  import heroImg from './assets/hero.png'
+  <img src={heroImg} />
+  ```
+
+### 2. `public/` (The "Static" way)
+Use this for files that should never change their URL and are referenced as absolute paths.
+- **How it works**: Vite ignores these files during processing and simply copies them to the build root.
+- **Usage**:
+  ```tsx
+  // Referenced as a simple string, no import needed
+  <link rel="icon" href="/favicon.svg" />
+  <use href="/icons.svg#github-icon" />
+  ```
+
+## Type Safety with Eden Treaty
+
+The project exports the backend's type definition:
+```typescript
+// backend/src/server.ts
+export type App = typeof app;
 ```
+
+And consumes it in the frontend for a completely type-safe developer experience:
+```typescript
+// frontend/src/eden.ts
+import { edenTreaty } from '@elysiajs/eden'
+import type { App } from "@backend/server";
+
+export const client = edenTreaty<App>(window.location.origin)
+```
+
+No more manual interface syncing or `fetch` guessing!

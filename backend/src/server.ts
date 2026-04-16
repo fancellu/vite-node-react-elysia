@@ -15,8 +15,8 @@ console.log('='.repeat(40) + '\n')
 
 
 console.log(`Operating System: ${osType}`);
-
-new Elysia({ adapter: node(), prefix: '/api' })
+export const app=
+    new Elysia({ adapter: node(), prefix: '/api' })
     .onBeforeHandle(({ params, query, path, body }) => {
         console.log(`\n[${new Date().toLocaleTimeString()}] ${path}`);
         if (Object.keys(params || {}).length > 0) console.log('  Params:', params);
@@ -30,8 +30,11 @@ new Elysia({ adapter: node(), prefix: '/api' })
     // .use(await staticPlugin({ alwaysStatic: true, assets: "public", prefix: '/', bunFullstack : true }))
     .get("/hello", () => ({ hello: "Node.js!👋" }))
     .get('/ping', () => {
-        return { status: 'success',  data: `Data from persistent Bun daemon! isProd=${isProd} ` + new Date().toLocaleString()+` ${osPlatform}`}
+        return `Data from persistent Elysia backend! isProd=${isProd} ` + new Date().toLocaleString()+` ${osPlatform}`
     })
-  .listen(3000);
+
+app.listen(3000);
 
 console.log(`Listening on http://localhost:3000`);
+
+export type App = typeof app
