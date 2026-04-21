@@ -14,7 +14,7 @@ This project demonstrates a modern full-stack architecture using **Elysia** on *
 
 - **GET `/hello`**: Returns a simple greeting object.
 - **GET `/ping`**: Returns persistent backend status, including OS platform and uptime.
-- **DELETE `/delete/:id`**: Demonstrates **Path Parameters** using `t.Numeric()` for automatic type coercion.
+- **DELETE `/remove/:id`**: Demonstrates **Path Parameters** using `t.Numeric()` for automatic type coercion.
 - **POST `/deletePost`**: Demonstrates **Request Body** validation for a delete-like operation.
 
 ## Project Structure
@@ -44,6 +44,7 @@ This project demonstrates a modern full-stack architecture using **Elysia** on *
 3. **Access the App**:
    - Frontend: [http://localhost:5173](http://localhost:5173)
    - Backend API: [http://localhost:5173/api/hello](http://localhost:5173/api/hello) (proxied)
+   - Swagger for API Docs http://localhost:5173/api/swagger
 
 ## Production Build
 

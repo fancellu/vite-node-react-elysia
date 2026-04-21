@@ -2,6 +2,7 @@ import { Elysia, t } from "elysia";
 import { node } from "@elysiajs/node";
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { swagger } from '@elysiajs/swagger'
 
 import os from 'os';
 
@@ -17,6 +18,7 @@ console.log('='.repeat(40) + '\n')
 
 const api=
     new Elysia({ adapter: node(), prefix: '/api' })
+        .use(swagger())
         .onBeforeHandle(({ params, query, path, body }) => {
             console.log(`\nAPI [${new Date().toLocaleTimeString()}] ${path}`);
             if (Object.keys(params || {}).length > 0) console.log('  Params:', params);
@@ -32,7 +34,7 @@ const api=
         .get('/ping', () => {
             return `Data from persistent Elysia backend! isProd=${isProd} ` + new Date().toLocaleString()+` ${osPlatform}`
         }) // takes params in path
-        .delete('/delete/:id', async ({params: { id }, status}) => {
+        .delete('/remove/:id', async ({params: { id }, status}) => {
             return  status(200, `Deleted, got param with ID ${id}`)
         }, {
             params: t.Object({

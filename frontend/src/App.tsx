@@ -16,8 +16,8 @@ function App() {
     }
 
     const fetchBackendDelete = async () => {
-        // Now using path parameters: /api/delete/:id
-        const { data } = await client.api.delete({ id: 1 }).delete()
+        // Renamed segment to /remove/:id to avoid conflict with .delete() method
+        const { data } = await client.api.remove({ id: 1 }).delete()
         setData(data)
     }
 
