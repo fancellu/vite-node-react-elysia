@@ -1,4 +1,4 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import { node } from "@elysiajs/node";
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -31,8 +31,21 @@ const api=
         .get("/hello", () => ({ hello: "Node.js!👋" }))
         .get('/ping', () => {
             return `Data from persistent Elysia backend! isProd=${isProd} ` + new Date().toLocaleString()+` ${osPlatform}`
+        }) // takes params in path
+        .delete('/delete/:id', async ({params: { id }, status}) => {
+            return  status(200, `Deleted, got param with ID ${id}`)
+        }, {
+            params: t.Object({
+                id: t.Numeric(),
+            })
+        }) // takes params in body
+        .post('/deletePost', async ({body, status}) => {
+            return  status(200, `Deleted, got query with ID ${body.id}`)
+        }, {
+            body: t.Object({
+                id: t.Number(),
+            })
         })
-
 
 console.log(`Operating System: ${osType}`);
 

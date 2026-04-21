@@ -1,21 +1,28 @@
-# Vite + Node + React + Elysia (no Bun)
+# Vite + Node + React + Elysia (Elysia v2 / Eden Treaty 2)
 
-This project demonstrates a modern full-stack architecture using **Elysia** on **Node.js** with a **React** frontend powered by **Vite**. It achieves end-to-end type safety without requiring the Bun runtime.
+This project demonstrates a modern full-stack architecture using **Elysia** on **Node.js** with a **React** frontend powered by **Vite**. It achieves end-to-end type safety using **Eden Treaty 2** without requiring the Bun runtime.
 
 ## Core Features
 
-- **🚀 Elysia on Node.js**: High-performance backend using the `@elysiajs/node` adapter.
-- **🛡️ Eden Treaty**: Full end-to-end type safety. The frontend "knows" the backend API types automatically.
+- **🚀 Elysia v1.2+ on Node.js**: High-performance backend using the `@elysiajs/node` adapter.
+- **🛡️ Eden Treaty 2**: Full end-to-end type safety with the modern Treaty 2 syntax. The frontend "knows" the backend API types automatically.
 - **⚡ Vite Frontend**: Fast HMR and optimized builds for React.
 - **💎 TypeScript "Project References"**: Clean separation between Frontend, Backend, and Tooling (Vite) configurations.
 - **🔧 Zero Bun Dependency**: Optimized for environments where Node.js is the preferred runtime.
+
+## API Endpoints (Prefixed with `/api`)
+
+- **GET `/hello`**: Returns a simple greeting object.
+- **GET `/ping`**: Returns persistent backend status, including OS platform and uptime.
+- **DELETE `/delete/:id`**: Demonstrates **Path Parameters** using `t.Numeric()` for automatic type coercion.
+- **POST `/deletePost`**: Demonstrates **Request Body** validation for a delete-like operation.
 
 ## Project Structure
 
 ```text
 ├── backend/src/server.ts  # Elysia server & API definitions
 ├── frontend/src/          # React application
-│   ├── eden.ts            # Eden Treaty client configuration
+│   ├── eden.ts            # Eden Treaty 2 client configuration
 │   └── App.tsx            # Type-safe API usage example
 ├── public/                # Static assets
 └── vite.config.ts         # Vite configuration with API proxy
@@ -81,7 +88,7 @@ Use this for files that should never change their URL and are referenced as abso
   <use href="/icons.svg#github-icon" />
   ```
 
-## Type Safety with Eden Treaty
+## Type Safety with Eden Treaty 2
 
 The project exports the backend's type definition:
 ```typescript
@@ -89,13 +96,16 @@ The project exports the backend's type definition:
 export type App = typeof app;
 ```
 
-And consumes it in the frontend for a completely type-safe developer experience:
+And consumes it in the frontend using the new **Treaty 2** syntax:
 ```typescript
 // frontend/src/eden.ts
-import { edenTreaty } from '@elysiajs/eden'
+import { treaty } from '@elysiajs/eden'
 import type { App } from "@backend/server";
 
-export const client: ReturnType<typeof edenTreaty<App>> = edenTreaty<App>(window.location.origin)
+export const client = treaty<App>(window.location.origin)
+
+// Usage in App.tsx (Path Parameters)
+const { data } = await client.api.delete({ id: 1 }).delete()
 ```
 
 No more manual interface syncing or `fetch` guessing!

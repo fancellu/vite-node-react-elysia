@@ -15,6 +15,18 @@ function App() {
         setData(data)
     }
 
+    const fetchBackendDelete = async () => {
+        // Now using path parameters: /api/delete/:id
+        const { data } = await client.api.delete({ id: 1 }).delete()
+        setData(data)
+    }
+
+    const fetchBackendDeletePost = async () => {
+        // note we pass as body
+        const data = await client.api.deletePost.post({id:1})
+        setData(JSON.stringify(data))
+    }
+
     return (
         <>
             <section id="center">
@@ -37,6 +49,12 @@ function App() {
                 </button>
                 <button onClick={fetchBackend}>
                     Ping Backend with Eden Treaty
+                </button>
+                <button onClick={fetchBackendDelete}>
+                    Ping Backend Delete with Eden Treaty
+                </button>
+                <button onClick={fetchBackendDeletePost}>
+                    Ping Backend Deletepost with Eden Treaty
                 </button>
                 {data && (
                     <p className="mt-4 text-green-600 dark:text-green-400 font-medium">
